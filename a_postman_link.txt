@@ -1,0 +1,22 @@
+GET
+home
+http://localhost:9000/
+
+POST
+book_room
+http://localhost:9000/book_room?type=DeluxeRoom
+BasicRoom or DeluxeRoom
+
+GET
+customer_booked
+http://localhost:9000/customer_booked
+
+GET
+customer_history
+http://localhost:9000/customer_history
+
+POST
+create_room
+http://localhost:9000/create_room
+
+
