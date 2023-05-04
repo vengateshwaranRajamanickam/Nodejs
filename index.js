@@ -75,6 +75,28 @@ app.get('/student/:id',async(req,res)=>{
 })
 
 
+app.get('/student',async(req,res)=>{
+    try{
+        const product=await client.db("school").collection("Student").find({}).toArray()
+        return res.send(product)
+    }
+    catch(err){
+        return res.send({message:err.message})
+    }
+})
+
+app.get('/mentor',async(req,res)=>{
+    try{
+        const product=await client.db("school").collection("Mentor").find({}).toArray()
+        return res.send(product)
+    }
+    catch(err){
+        return res.send({message:err.message})
+    }
+})
+
+
+
 app.listen(PORT,()=>console.log("server started on port",PORT))
 
 
