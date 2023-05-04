@@ -95,6 +95,17 @@ app.get('/mentor',async(req,res)=>{
     }
 })
 
+app.get('/studentwithoutmentor',async(req,res)=>{
+    try{
+        const product=await assignstudent();
+        return res.send(product)
+    }
+    catch(err){
+        return res.send({message:err.message})
+    }
+})
+
+
 
 
 app.listen(PORT,()=>console.log("server started on port",PORT))
