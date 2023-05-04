@@ -1,6 +1,7 @@
 import  express  from "express";
 import  {MongoClient} from "mongodb";
 import * as dotenv from 'dotenv'
+import cors from 'cors'
 import { create, assignstudent, assignmentor } from "./mongo_query.js";
 dotenv.config()
 const app=express()
