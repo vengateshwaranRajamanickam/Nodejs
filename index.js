@@ -5,6 +5,7 @@ import { create, assignstudent, assignmentor } from "./mongo_query.js";
 dotenv.config()
 const app=express()
 const PORT=process.env.PORT;
+app.use(cors())
 app.use(express.json())  //interceptor convert body to json
 
 const MONGO_URL=process.env.MONGO_URL;
