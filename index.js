@@ -42,7 +42,7 @@ app.put('/student/:id',async(req,res)=>{
         const pick=Number(req.params['id'])
         let select_men = await assignmentor()
        if(res.type=="change"){
-        const product=await client.db("school").collection("Student").replaceOne({id:{$eq:pick}},{$pop:{mentor:1}},{$set:{mentor:select_men}})
+        const product=await client.db("school").collection("Student").replaceOne({id:{$eq:pick}},{$set:{mentor:select_men}})
         return res.status(200).send(product)
        }
         const product=await client.db("school").collection("Student").updateOne({id:{$eq:pick}},{$set:{mentor:select_men}})
@@ -69,7 +69,7 @@ app.get('/showmentor/:id',async(req,res)=>{
 app.get('/student/:id',async(req,res)=>{
     try{
         const pick=Number(req.params['id'])
-        const product=await client.db("school").collection("Student").find({id:{$eq:pick}},{mentor: {$slice:-2}}).toArray()
+        const product=await client.db("school").collection("Student").find({id:{$eq:pick}}).toArray()
         return res.send(product)
     }
     catch(err){
