@@ -20,41 +20,44 @@ export const client= await createConnection();
 //1,2 create a mentor and student
 app.post('/create',async(req,res)=>{
     const type=req.query.type;
-    const insidebody=req.body;
-    const product=await create(type, insidebody)
+    const insidebody= req.body
+    const product=await create(type,insidebody)
     return res.send(product)
 })
 //3 select one mentor and assign a multi-student
 app.put('/mentor/:id',async(req,res)=>{
     try{
-        let select_Stud = await assignstudent()
+        let select_Stud =await assignstudent()
         const pick=Number(req.params['id'])
-        const product=await client.db("school").collection("Mentor").updateOne({id:{$eq:pick}},{$set:{student_list: select_Stud }}).toArray()
-        return res.send(product)
+        const product=await client.db("school").collection("Mentor").updateOne({id:{$eq:pick}},{$set:{student_list:select_Stud }})
+        return res.status(200).send(product)
     }
-    catch{
-        return res.send("No student assign")
+    catch(err){
+        return res.status(403).send({message:err.message})
     }
  })
 //4 Assign or Change Mentor for particular Student
 app.put('/student/:id',async(req,res)=>{
     try{
         const pick=Number(req.params['id'])
-        let select_men = [...select_men,await assignmentor()]
-        console.log(select_men)
-        const product=await client.db("school").collection("Student").updateOne({id:{$eq:pick}},{$set:{mentor: select_men}}).toArray()
-        return res.send(product)
+        let select_men = await assignmentor()
+       if(res.type=="change"){
+        const product=await client.db("school").collection("Student").replaceOne({id:{$eq:pick}},{$pop:{mentor:1}},{$set:{mentor:select_men}})
+        return res.status(200).send(product)
+       }
+        const product=await client.db("school").collection("Student").updateOne({id:{$eq:pick}},{$set:{mentor:select_men}})
+        return res.status(200).send(product)
     }
-    catch{
-        return res.send("No Mentor assign")
+    catch(err){
+        return res.status(204).send({message:err.message})
     }
 })
 
-//5  show all students for a particular mento
+//5  show all students for a particular mentor
 app.get('/showmentor/:id',async(req,res)=>{
     try{
         const pick=Number(req.params['id'])
-        const product=await client.db("school").collection("Mentor").find({id:{$eq:pick}},{_id:0}).toArray()
+        const product=await client.db("school").collection("Mentor").find({id:{$eq:pick}}).toArray()
         return res.send(product)
     }
     catch(err){
@@ -62,11 +65,11 @@ app.get('/showmentor/:id',async(req,res)=>{
     }
 })
 
-//6 API to show the previously assigned mentor for a particular student.
+//6 show the previously assigned mentor for a particular student.
 app.get('/student/:id',async(req,res)=>{
     try{
         const pick=Number(req.params['id'])
-        const product=await client.db("school").collection("Student").find({id:{$eq:pick}},{_id:0,mentor:1 ,student_name:1}).toArray()
+        const product=await client.db("school").collection("Student").find({id:{$eq:pick}},{mentor: {$slice:-2}}).toArray()
         return res.send(product)
     }
     catch(err){
@@ -104,8 +107,6 @@ app.get('/studentwithoutmentor',async(req,res)=>{
         return res.send({message:err.message})
     }
 })
-
-
 
 
 app.listen(PORT,()=>console.log("server started on port",PORT))
